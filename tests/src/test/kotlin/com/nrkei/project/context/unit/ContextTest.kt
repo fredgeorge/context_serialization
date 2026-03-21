@@ -25,7 +25,6 @@ internal class ContextTest {
             assertEquals(70.5, context[WEIGHT])
             context[BIRTHDATE] = LocalDate.of(1958, 3, 5)
             assertEquals(LocalDate.of(1958, 3, 5), context[BIRTHDATE])
-//            assertEquals("a string", AGE.javaClass.name)
         }
     }
 
