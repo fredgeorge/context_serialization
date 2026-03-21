@@ -25,12 +25,13 @@ internal class ContextTest {
             assertEquals(70.5, context[WEIGHT])
             context[BIRTHDATE] = LocalDate.of(1958, 3, 5)
             assertEquals(LocalDate.of(1958, 3, 5), context[BIRTHDATE])
+//            assertEquals("a string", AGE.javaClass.name)
         }
     }
 
-    object NAME : ContextLabel<String>("NAME")
-    object AGE : ContextLabel<Int>("AGE")
-    object WEIGHT : ContextLabel<Double>("WEIGHT")
-    object BIRTHDATE: ContextLabel<LocalDate>("BIRTHDATE")
+    private val NAME = ContextLabel.String("NAME")
+    private val AGE = ContextLabel.Int("AGE")
+    private val WEIGHT = ContextLabel.Double("WEIGHT")
+    private val BIRTHDATE= ContextLabel.Date("BIRTHDATE")
 
 }

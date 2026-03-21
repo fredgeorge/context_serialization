@@ -6,26 +6,69 @@
 
 package com.nrkei.project.context
 
+import java.time.LocalDate
 import kotlin.collections.toMutableMap
 
-// Understands information useful for Tasks
-class Context(values: Map<ContextLabel<*>, Any> = emptyMap()) {
-    private val values = values.toMutableMap()
+// Identifies a piece of information useful for Tasks
+interface ValueCodec<T> {
+    val typeName: String
+    fun encode(value: T): String
+    fun decode(text: String): T
+}
 
-    operator fun <T> set(label: ContextLabel<T>, value: T) {
-        values[label] = value as Any
-    }
+object IntCodec : ValueCodec<Int> {
+    override val typeName = "Int"
+    override fun encode(value: Int): String = value.toString()
+    override fun decode(text: String): Int = text.toInt()
+}
 
-    operator fun <T> get(label: ContextLabel<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return (values[label] as? T) ?: throw IllegalStateException("No value exists for ${label.name}")
+object DoubleCodec : ValueCodec<Double> {
+    override val typeName = "Double"
+    override fun encode(value: Double): String = value.toString()
+    override fun decode(text: String): Double = text.toDouble()
+}
+
+object StringCodec : ValueCodec<String> {
+    override val typeName = "String"
+    override fun encode(value: String): String = value
+    override fun decode(text: String): String = text
+}
+
+object LocalDateCodec : ValueCodec<LocalDate> {
+    override val typeName = "LocalDate"
+    override fun encode(value: LocalDate): String =
+        value.toString()   // ISO-8601: "2026-03-21"
+    override fun decode(text: String): LocalDate =
+        LocalDate.parse(text)
+}
+
+class ContextLabel<T> private constructor(
+    val name: String,
+    val codec: ValueCodec<T>
+) {
+    companion object {
+        fun Int(name: String) = ContextLabel(name, IntCodec)
+        fun String(name: String) = ContextLabel(name, StringCodec)
+        fun Double(name: String) = ContextLabel(name, DoubleCodec)
+        fun Date(name: String) = ContextLabel(name, LocalDateCodec)
     }
 }
 
-abstract class ContextLabel<T>(val name: String) {
-    override fun equals(other: Any?) = this === other ||
-            other is ContextLabel<T> && this.name == other.name
+// Understands information useful for Tasks
+class Context(
+    values: Map<ContextLabel<*>, Any> = mutableMapOf()
+) {
+    private val values = values.toMutableMap()
 
-    override fun hashCode() = name.hashCode()
+    operator fun <T: Any> set(label: ContextLabel<T>, value: T) {
+        values[label] = value
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T: Any> get(label: ContextLabel<T>) =
+        values[label] as T
+
+    operator fun contains(label: ContextLabel<*>) =
+        label in values
 }
 
