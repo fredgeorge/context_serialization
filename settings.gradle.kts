@@ -1,2 +1,2 @@
-rootProject.name = "kotlin-gradle-template"
+rootProject.name = "context_serialization"
 include("engine", "tests")
