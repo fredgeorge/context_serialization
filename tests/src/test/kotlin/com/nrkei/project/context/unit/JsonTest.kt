@@ -12,8 +12,10 @@ import com.nrkei.project.context.toJson
 import com.nrkei.project.context.util.TestLabels.ADDRESS
 import com.nrkei.project.context.util.TestLabels.AGE
 import com.nrkei.project.context.util.TestLabels.BIRTHDATE
+import com.nrkei.project.context.util.TestLabels.BORROWERS
 import com.nrkei.project.context.util.TestLabels.HOUSE_NUMBER
 import com.nrkei.project.context.util.TestLabels.NAME
+import com.nrkei.project.context.util.TestLabels.PRODUCT
 import com.nrkei.project.context.util.TestLabels.STREET
 import com.nrkei.project.context.util.TestLabels.WEIGHT
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -63,6 +65,37 @@ internal class JsonTest {
                     assertEquals("John Doe", restored[NAME])
                     assertEquals("Main Street", restored[ADDRESS][STREET])
                     assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
+                }
+            }
+        }
+    }
+
+    @Test fun `context of context persistence with sub-context for each person`() {
+        Context().also { context ->
+            context[PRODUCT] = "Credit Card"
+            context[ADDRESS] = Context().apply {
+                this[STREET] = "Main Street"
+                this[HOUSE_NUMBER] = 123
+            }
+            context[BORROWERS] = listOf<Context>(
+                Context().apply {
+                    this[NAME] = "John Doe"
+                    this[AGE] = 42
+                },
+                Context().apply {
+                    this[NAME] = "Jane Doe"
+                    this[AGE] = 45
+                },
+            )
+            context.toJson().also { jsonString ->
+                jsonString.toContext().also { restored ->
+                    assertEquals("Credit Card", restored[PRODUCT])
+                    assertEquals("Main Street", restored[ADDRESS][STREET])
+                    assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
+                    assertEquals("John Doe", restored[BORROWERS][0][NAME])
+                    assertEquals(42, restored[BORROWERS][0][AGE])
+                    assertEquals("Jane Doe", restored[BORROWERS][1][NAME])
+                    assertEquals(45, restored[BORROWERS][1][AGE])
                 }
             }
         }

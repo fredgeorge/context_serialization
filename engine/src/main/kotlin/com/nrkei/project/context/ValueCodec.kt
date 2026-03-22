@@ -58,3 +58,15 @@ object ContextCodec : ValueCodec<Context> {
     }
 }
 
+object ContextListCodec : ValueCodec<List<Context>> {
+    override val typeName: String = "List<Context>"
+    private val mapper = JsonSupport.mapper
+
+    override fun encode(value: List<Context>) =
+        mapper.writeValueAsString(value.map { serializeContext(it) })
+
+    override fun decode(text: String): List<Context> {
+        val storedLists: List<List<StoredEntry>> = mapper.readValueTyped(text)
+        return storedLists.map(::deserializeContext)
+    }
+}

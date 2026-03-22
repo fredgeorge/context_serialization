@@ -17,4 +17,6 @@ internal object TestLabels {
    internal val ADDRESS= label("ADDRESS", ContextCodec)
    internal val STREET = label("STREET", StringCodec)
    internal val HOUSE_NUMBER = label("HOUSE_NUMBER", IntCodec)
+   internal val PRODUCT = label("PRODUCT", StringCodec)
+   internal val BORROWERS = label("BORROWERS", ContextListCodec)
 }
