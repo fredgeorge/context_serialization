@@ -7,6 +7,8 @@
 package com.nrkei.project.context.unit
 
 import com.nrkei.project.context.Context
+import com.nrkei.project.context.JsonSupport.mapper
+import com.nrkei.project.context.StoredEntry
 import com.nrkei.project.context.deserializeContext
 import com.nrkei.project.context.serializeContext
 import com.nrkei.project.context.util.TestLabels.AGE
@@ -26,12 +28,16 @@ internal class JsonTest {
             original[NAME] = "John Doe"
             original[WEIGHT] = 70.5
             original[BIRTHDATE] = LocalDate.of(1958, 3, 5)
-            serializeContext(original).also { storedContext ->
-
-                println("--- Stored entries ---")
-                storedContext.forEach(::println)
-
-                deserializeContext(storedContext).also { restored ->
+            mapper.writeValueAsString(serializeContext(original)).also { jsonString ->
+                val restoredEntries: List<StoredEntry> =
+                    mapper.readValue(
+                        jsonString,
+                        mapper.typeFactory.constructCollectionType(
+                            List::class.java,
+                            StoredEntry::class.java
+                        )
+                    )
+                deserializeContext(restoredEntries).also { restored ->
                     restored[NAME] = restored[NAME] + ", Jr"
                     assertEquals("John Doe, Jr", restored[NAME])
                     restored[AGE] = restored[AGE] + 2
