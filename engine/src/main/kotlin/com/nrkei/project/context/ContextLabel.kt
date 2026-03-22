@@ -14,8 +14,5 @@ class ContextLabel<T>(
     override fun toString(): String = name
 }
 
-fun <T> label(
-    name: String,
-    codec: ValueCodec<T>
-): ContextLabel<T> =
+fun <T> label(name: String, codec: ValueCodec<T>) =
     ContextLabel(name, codec).also(ContextLabelRegistry::register)

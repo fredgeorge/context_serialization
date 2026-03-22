@@ -38,3 +38,23 @@ object DateCodec : ValueCodec<LocalDate> {
     override fun encode(value: LocalDate): String = value.toString()   // ISO-8601
     override fun decode(text: String): LocalDate = LocalDate.parse(text)
 }
+
+object ContextCodec : ValueCodec<Context> {
+    override val typeName = "Context"
+    private val mapper = JsonSupport.mapper
+
+    override fun encode(value: Context) =
+        mapper.writeValueAsString(serializeContext(value))
+
+    override fun decode(text: String): Context {
+        val stored: List<StoredEntry> =
+            mapper.readValue(text,
+                mapper.typeFactory.constructCollectionType(
+                    List::class.java,
+                    StoredEntry::class.java
+                )
+            )
+        return deserializeContext(stored)
+    }
+}
+

@@ -12,13 +12,9 @@ object ContextLabelRegistry {
 
     internal fun register(label: ContextLabel<*>) {
         val existing = contextLabelsByName.putIfAbsent(label.name, label)
-        require(existing == null) {
-            "Duplicate ContextLabel name '${label.name}'"
-        }
+        require(existing == null) { "Duplicate label '${label.name}'" }
     }
 
     fun find(name: String): ContextLabel<*> =
-        contextLabelsByName[name] ?: error("Unknown ContextLabel '$name'")
-
-    fun all(): List<ContextLabel<*>> = contextLabelsByName.values.toList()
+        contextLabelsByName[name] ?: error("Unknown label '$name'")
 }

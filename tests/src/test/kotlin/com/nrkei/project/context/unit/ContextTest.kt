@@ -7,9 +7,12 @@
 package com.nrkei.project.context.unit
 
 import com.nrkei.project.context.Context
+import com.nrkei.project.context.util.TestLabels.ADDRESS
 import com.nrkei.project.context.util.TestLabels.AGE
 import com.nrkei.project.context.util.TestLabels.BIRTHDATE
+import com.nrkei.project.context.util.TestLabels.HOUSE_NUMBER
 import com.nrkei.project.context.util.TestLabels.NAME
+import com.nrkei.project.context.util.TestLabels.STREET
 import com.nrkei.project.context.util.TestLabels.WEIGHT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -47,6 +50,19 @@ internal class ContextTest {
 //             context[NAME] = 18
 //             context[WEIGHT] = LocalDate.of(1958, 3, 5)
 //             context[BIRTHDATE] = 70.5
+        }
+    }
+
+    @Test fun `context of context`() {
+        Context().also { context ->
+            context[NAME] = "John Doe"
+            context[ADDRESS] = Context().apply {
+                this[STREET] = "Main Street"
+                this[HOUSE_NUMBER] = 123
+                }
+            assertEquals("John Doe", context[NAME])
+            assertEquals("Main Street", context[ADDRESS][STREET])
+            assertEquals(123, context[ADDRESS][HOUSE_NUMBER])
         }
     }
 }

@@ -6,11 +6,7 @@
 
 package com.nrkei.project.context.util
 
-import com.nrkei.project.context.DateCodec
-import com.nrkei.project.context.DoubleCodec
-import com.nrkei.project.context.IntCodec
-import com.nrkei.project.context.StringCodec
-import com.nrkei.project.context.label
+import com.nrkei.project.context.*
 
 // Understands SOMETHING_DUMMY
 internal object TestLabels {
@@ -18,4 +14,7 @@ internal object TestLabels {
    internal val AGE = label("AGE", IntCodec)
    internal val WEIGHT = label("WEIGHT", DoubleCodec)
    internal val BIRTHDATE= label("BIRTHDATE", DateCodec)
+   internal val ADDRESS= label("ADDRESS", ContextCodec)
+   internal val STREET = label("STREET", StringCodec)
+   internal val HOUSE_NUMBER = label("HOUSE_NUMBER", IntCodec)
 }
