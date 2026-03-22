@@ -6,7 +6,7 @@
 
 package com.nrkei.project.context
 
-// Understands rendering and restoring a Context
+// Understands data for rendering and restoring a Context
 data class StoredEntry(
     val label: String,
     val type: String,
@@ -30,21 +30,18 @@ private fun <T> serializeTypedEntry(entry: ContextEntry<T>): StoredEntry =
 
 // ---------- Deserialization ----------
 
-fun deserializeContext(storedEntries: List<StoredEntry>): Context {
-    val context = Context()
-    storedEntries.forEach { restoreEntry(context, it) }
-    return context
+fun deserializeContext(storedEntries: List<StoredEntry>) = Context()
+    .also { context -> storedEntries.forEach { restoreEntry(context, it) }
 }
 
 private fun restoreEntry(context: Context, stored: StoredEntry) {
-    val label = ContextLabelRegistry.find(stored.label)
-
-    require(label.codec.typeName == stored.type) {
-        "Type mismatch for label '${stored.label}': stored type '${stored.type}', expected '${label.codec.typeName}'"
+    ContextLabelRegistry.find(stored.label).also { label ->
+        require(label.codec.typeName == stored.type) {
+            "Type mismatch for label '${stored.label}': stored type '${stored.type}', expected '${label.codec.typeName}'"
+        }
+        @Suppress("UNCHECKED_CAST")
+        restoreTyped(context, label as ContextLabel<Any>, stored.value)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    restoreTyped(context, label as ContextLabel<Any>, stored.value)
 }
 
 private fun <T: Any> restoreTyped(

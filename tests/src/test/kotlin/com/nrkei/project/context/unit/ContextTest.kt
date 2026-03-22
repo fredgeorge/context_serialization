@@ -12,7 +12,9 @@ import com.nrkei.project.context.util.TestLabels.BIRTHDATE
 import com.nrkei.project.context.util.TestLabels.NAME
 import com.nrkei.project.context.util.TestLabels.WEIGHT
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 
 // Ensures Context works correctly
@@ -20,6 +22,8 @@ internal class ContextTest {
 
     @Test fun `context holds various types`() {
         Context().also { context ->
+            assert(context.isEmpty())
+
             context[NAME] = "John Doe"
             assertEquals("John Doe", context[NAME])
 
@@ -32,7 +36,13 @@ internal class ContextTest {
             context[BIRTHDATE] = LocalDate.of(1958, 3, 5)
             assertEquals(LocalDate.of(1958, 3, 5), context[BIRTHDATE])
 
+            context.remove(AGE)
+            assertThrows<NoSuchElementException> { context[AGE] }
+
+            assertFalse(context.isEmpty())
+
             // These will NOT compile:
+//             context[AGE] = null
 //             context[AGE] = "hello"
 //             context[NAME] = 18
 //             context[WEIGHT] = LocalDate.of(1958, 3, 5)

@@ -6,7 +6,7 @@
 
 package com.nrkei.project.context
 
-// Understands SOMETHING_DUMMY
+// Understands an entry in a Context
 data class ContextEntry<T>(
     val label: ContextLabel<T>,
     val value: T

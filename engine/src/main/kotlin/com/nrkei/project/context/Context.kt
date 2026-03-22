@@ -6,7 +6,6 @@
 
 package com.nrkei.project.context
 
-
 // Understands information useful for Tasks
 class Context(
     values: Map<ContextLabel<*>, Any> = emptyMap(),
@@ -18,23 +17,22 @@ class Context(
     }
 
     @Suppress("UNCHECKED_CAST")
-    operator fun <T: Any> get(label: ContextLabel<T>): T =
-        values[label] as? T
-            ?: error("No value stored for label '${label.name}'")
+    operator fun <T: Any> get(label: ContextLabel<T>) = values[label] as? T
+            ?: throw NoSuchElementException("No value stored for label '${label.name}'")
 
-    infix operator fun contains(label: ContextLabel<*>): Boolean =
+    infix operator fun contains(label: ContextLabel<*>) =
         label in values
 
     infix fun remove(label: ContextLabel<*>) {
         values.remove(label)
     }
 
-    fun isEmpty(): Boolean = values.isEmpty()
+    fun isEmpty() = values.isEmpty()
 
-    fun entries(): List<ContextEntry<*>> =
+    fun entries() =
         values.map { (label, value) -> ContextEntry.unsafe(label, value) }
 
-    override fun toString(): String =
+    override fun toString() =
         values.entries.joinToString(prefix = "Context(", postfix = ")") { (label, value) ->
             "${label.name}=$value"
         }

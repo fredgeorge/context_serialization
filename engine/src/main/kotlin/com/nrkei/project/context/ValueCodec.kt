@@ -8,7 +8,7 @@ package com.nrkei.project.context
 
 import java.time.LocalDate
 
-// Understands serializing and deserializing values
+// Understands serializing and deserializing of Context values
 interface ValueCodec<T> {
     val typeName: String
     fun encode(value: T): String

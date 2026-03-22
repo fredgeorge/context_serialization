@@ -8,17 +8,17 @@ package com.nrkei.project.context
 
 // Understands all the labels that can be used in a Context
 object ContextLabelRegistry {
-    private val byName = linkedMapOf<String, ContextLabel<*>>()
+    private val contextLabelsByName = linkedMapOf<String, ContextLabel<*>>()
 
-    fun register(label: ContextLabel<*>) {
-        val existing = byName.putIfAbsent(label.name, label)
+    internal fun register(label: ContextLabel<*>) {
+        val existing = contextLabelsByName.putIfAbsent(label.name, label)
         require(existing == null) {
             "Duplicate ContextLabel name '${label.name}'"
         }
     }
 
     fun find(name: String): ContextLabel<*> =
-        byName[name] ?: error("Unknown ContextLabel '$name'")
+        contextLabelsByName[name] ?: error("Unknown ContextLabel '$name'")
 
-    fun all(): List<ContextLabel<*>> = byName.values.toList()
+    fun all(): List<ContextLabel<*>> = contextLabelsByName.values.toList()
 }
