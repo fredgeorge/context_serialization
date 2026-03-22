@@ -9,10 +9,24 @@ package com.nrkei.project.context
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.nrkei.project.context.JsonSupport.mapper
 
 // Understands SOMETHING_DUMMY
 object JsonSupport {
     val mapper: ObjectMapper = ObjectMapper()
         .registerKotlinModule()
         .registerModule(JavaTimeModule())
+}
+
+fun Context.toJson() = mapper.writeValueAsString(serializeContext(this))
+
+fun String.toContext(): Context {val restoredEntries: List<StoredEntry> =
+    mapper.readValue(
+        this,
+        mapper.typeFactory.constructCollectionType(
+            List::class.java,
+            StoredEntry::class.java
+        )
+    )
+    return deserializeContext(restoredEntries)
 }

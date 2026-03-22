@@ -7,10 +7,8 @@
 package com.nrkei.project.context.unit
 
 import com.nrkei.project.context.Context
-import com.nrkei.project.context.JsonSupport.mapper
-import com.nrkei.project.context.StoredEntry
-import com.nrkei.project.context.deserializeContext
-import com.nrkei.project.context.serializeContext
+import com.nrkei.project.context.toContext
+import com.nrkei.project.context.toJson
 import com.nrkei.project.context.util.TestLabels.AGE
 import com.nrkei.project.context.util.TestLabels.BIRTHDATE
 import com.nrkei.project.context.util.TestLabels.NAME
@@ -28,22 +26,17 @@ internal class JsonTest {
             original[NAME] = "John Doe"
             original[WEIGHT] = 70.5
             original[BIRTHDATE] = LocalDate.of(1958, 3, 5)
-            mapper.writeValueAsString(serializeContext(original)).also { jsonString ->
-                val restoredEntries: List<StoredEntry> =
-                    mapper.readValue(
-                        jsonString,
-                        mapper.typeFactory.constructCollectionType(
-                            List::class.java,
-                            StoredEntry::class.java
-                        )
-                    )
-                deserializeContext(restoredEntries).also { restored ->
+            original.toJson().also { jsonString ->
+                jsonString.toContext().also { restored ->
                     restored[NAME] = restored[NAME] + ", Jr"
                     assertEquals("John Doe, Jr", restored[NAME])
+
                     restored[AGE] = restored[AGE] + 2
                     assertEquals(20, restored[AGE])
+
                     restored[WEIGHT] = restored[WEIGHT] - 2
                     assertEquals(68.5, restored[WEIGHT])
+
                     restored[BIRTHDATE] = restored[BIRTHDATE].plusDays(2)
                     assertEquals(LocalDate.of(1958, 3, 7), restored[BIRTHDATE])
                 }
