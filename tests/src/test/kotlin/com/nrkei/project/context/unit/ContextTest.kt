@@ -7,7 +7,10 @@
 package com.nrkei.project.context.unit
 
 import com.nrkei.project.context.Context
-import com.nrkei.project.context.ContextLabel
+import com.nrkei.project.context.util.TestLabels.AGE
+import com.nrkei.project.context.util.TestLabels.BIRTHDATE
+import com.nrkei.project.context.util.TestLabels.NAME
+import com.nrkei.project.context.util.TestLabels.WEIGHT
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -19,18 +22,21 @@ internal class ContextTest {
         Context().also { context ->
             context[NAME] = "John Doe"
             assertEquals("John Doe", context[NAME])
+
             context[AGE] = 18
             assertEquals(18, context[AGE])
+
             context[WEIGHT] = 70.5
             assertEquals(70.5, context[WEIGHT])
+
             context[BIRTHDATE] = LocalDate.of(1958, 3, 5)
             assertEquals(LocalDate.of(1958, 3, 5), context[BIRTHDATE])
+
+            // These will NOT compile:
+//             context[AGE] = "hello"
+//             context[NAME] = 18
+//             context[WEIGHT] = LocalDate.of(1958, 3, 5)
+//             context[BIRTHDATE] = 70.5
         }
     }
-
-    private val NAME = ContextLabel.String("NAME")
-    private val AGE = ContextLabel.Int("AGE")
-    private val WEIGHT = ContextLabel.Double("WEIGHT")
-    private val BIRTHDATE= ContextLabel.Date("BIRTHDATE")
-
 }
