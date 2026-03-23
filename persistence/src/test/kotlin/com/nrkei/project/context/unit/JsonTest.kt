@@ -18,7 +18,7 @@ import com.nrkei.project.context.util.TestLabels.NAME
 import com.nrkei.project.context.util.TestLabels.PRODUCT
 import com.nrkei.project.context.util.TestLabels.STREET
 import com.nrkei.project.context.util.TestLabels.WEIGHT
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -36,16 +36,16 @@ internal class JsonTest {
             original.toJson().also { jsonString ->
                 jsonString.toContext().also { restored ->
                     restored[NAME] = restored[NAME] + ", Jr"
-                    assertEquals("John Doe, Jr", restored[NAME])
+                    Assertions.assertEquals("John Doe, Jr", restored[NAME])
 
                     restored[AGE] = restored[AGE] + 2
-                    assertEquals(20, restored[AGE])
+                    Assertions.assertEquals(20, restored[AGE])
 
                     restored[WEIGHT] = restored[WEIGHT] - 2
-                    assertEquals(68.5, restored[WEIGHT])
+                    Assertions.assertEquals(68.5, restored[WEIGHT])
 
                     restored[BIRTHDATE] = restored[BIRTHDATE].plusDays(2)
-                    assertEquals(LocalDate.of(1958, 3, 7), restored[BIRTHDATE])
+                    Assertions.assertEquals(LocalDate.of(1958, 3, 7), restored[BIRTHDATE])
                 }
             }
         }
@@ -62,15 +62,16 @@ internal class JsonTest {
             original.toJson().also { jsonString ->
                 println(jsonString)
                 jsonString.toContext().also { restored ->
-                    assertEquals("John Doe", restored[NAME])
-                    assertEquals("Main Street", restored[ADDRESS][STREET])
-                    assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
+                    Assertions.assertEquals("John Doe", restored[NAME])
+                    Assertions.assertEquals("Main Street", restored[ADDRESS][STREET])
+                    Assertions.assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
                 }
             }
         }
     }
 
-    @Test fun `context of context persistence with sub-context for each person`() {
+    @Test
+    fun `context of context persistence with sub-context for each person`() {
         Context().also { context ->
             context[PRODUCT] = "Credit Card"
             context[ADDRESS] = Context().apply {
@@ -89,13 +90,13 @@ internal class JsonTest {
             )
             context.toJson().also { jsonString ->
                 jsonString.toContext().also { restored ->
-                    assertEquals("Credit Card", restored[PRODUCT])
-                    assertEquals("Main Street", restored[ADDRESS][STREET])
-                    assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
-                    assertEquals("John Doe", restored[BORROWERS][0][NAME])
-                    assertEquals(42, restored[BORROWERS][0][AGE])
-                    assertEquals("Jane Doe", restored[BORROWERS][1][NAME])
-                    assertEquals(45, restored[BORROWERS][1][AGE])
+                    Assertions.assertEquals("Credit Card", restored[PRODUCT])
+                    Assertions.assertEquals("Main Street", restored[ADDRESS][STREET])
+                    Assertions.assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
+                    Assertions.assertEquals("John Doe", restored[BORROWERS][0][NAME])
+                    Assertions.assertEquals(42, restored[BORROWERS][0][AGE])
+                    Assertions.assertEquals("Jane Doe", restored[BORROWERS][1][NAME])
+                    Assertions.assertEquals(45, restored[BORROWERS][1][AGE])
                 }
             }
         }
