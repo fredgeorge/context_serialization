@@ -9,10 +9,12 @@ package com.nrkei.project.context.unit
 import com.nrkei.project.context.Context
 import com.nrkei.project.context.toContext
 import com.nrkei.project.context.toJson
+import com.nrkei.project.context.util.Country.NORWAY
 import com.nrkei.project.context.util.TestLabels.ADDRESS
 import com.nrkei.project.context.util.TestLabels.AGE
 import com.nrkei.project.context.util.TestLabels.BIRTHDATE
 import com.nrkei.project.context.util.TestLabels.BORROWERS
+import com.nrkei.project.context.util.TestLabels.CITIZENSHIP
 import com.nrkei.project.context.util.TestLabels.HOUSE_NUMBER
 import com.nrkei.project.context.util.TestLabels.NAME
 import com.nrkei.project.context.util.TestLabels.PRODUCT
@@ -58,6 +60,7 @@ internal class JsonTest {
             original[ADDRESS] = Context().apply {
                 this[STREET] = "Main Street"
                 this[HOUSE_NUMBER] = 123
+                this[CITIZENSHIP] = NORWAY
             }
             original.toJson().also { jsonString ->
                 println(jsonString)
@@ -65,6 +68,7 @@ internal class JsonTest {
                     Assertions.assertEquals("John Doe", restored[NAME])
                     Assertions.assertEquals("Main Street", restored[ADDRESS][STREET])
                     Assertions.assertEquals(123, restored[ADDRESS][HOUSE_NUMBER])
+                    Assertions.assertEquals(NORWAY, restored[ADDRESS][CITIZENSHIP])
                 }
             }
         }

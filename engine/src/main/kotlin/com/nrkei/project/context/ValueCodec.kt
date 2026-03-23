@@ -70,3 +70,22 @@ object ContextListCodec : ValueCodec<List<Context>> {
         return storedLists.map(::deserializeContext)
     }
 }
+
+// Note this is a class, not an Object, to support lots of enums
+class EnumCodec<E : Enum<E>>(
+    private val enumClass: Class<E>
+) : ValueCodec<E> {
+
+    override val typeName: String = enumClass.name
+
+    override fun encode(value: E): String =
+        value.name
+
+    override fun decode(text: String): E =
+        try {
+            java.lang.Enum.valueOf(enumClass, text)
+        } catch (e: IllegalArgumentException) {
+            val allowed = enumClass.enumConstants.joinToString { it.name }
+            error("Invalid value '$text' for enum ${enumClass.simpleName}. Allowed: $allowed")
+        }
+}

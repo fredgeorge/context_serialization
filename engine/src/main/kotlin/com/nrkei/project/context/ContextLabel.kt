@@ -16,3 +16,7 @@ class ContextLabel<T>(
 
 fun <T> label(name: String, codec: ValueCodec<T>) =
     ContextLabel(name, codec).also(ContextLabelRegistry::register)
+
+// helper to define enums
+inline fun <reified E : Enum<E>> enumCodec(): ValueCodec<E> =
+    EnumCodec(E::class.java)

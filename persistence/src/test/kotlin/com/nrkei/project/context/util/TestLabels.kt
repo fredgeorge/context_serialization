@@ -19,4 +19,11 @@ internal object TestLabels {
    internal val HOUSE_NUMBER = label("HOUSE_NUMBER", IntCodec)
    internal val PRODUCT = label("PRODUCT", StringCodec)
    internal val BORROWERS = label("BORROWERS", ContextListCodec)
+   internal val CITIZENSHIP = label("CITIZENSHIP", enumCodec<Country>())
+}
+
+internal enum class Country {
+   NORWAY,
+   SWEDEN,
+   FINLAND
 }
